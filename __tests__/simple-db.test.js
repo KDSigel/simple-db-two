@@ -58,4 +58,28 @@ describe('simple database', () => {
 
   });
 
+  it('Get all the objects in the directory.', async () => {
+    const firstDb = new SimpleDb(TEST_DIR);
+    const newObject1 = {
+      name: 'test name',
+      text: 'I do not follow'
+    };
+    const newObject2 = {
+      name: 'Erich',
+      text: 'I love my cohort'
+    };
+    await firstDb.save(newObject1);
+    await firstDb.save(newObject2);
+
+    const allObjects = await firstDb.getAll();
+
+    expect(allObjects).toEqual([{
+      name: 'test name',
+      text: 'I do not follow'
+    }, {
+      name: 'Erich',
+      text: 'I love my cohort'
+    }]);
+  });
+
 });
