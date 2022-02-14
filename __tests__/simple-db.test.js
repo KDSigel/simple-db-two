@@ -24,10 +24,37 @@ describe('simple database', () => {
       text: 'I do not follow',
       id: shortId,
     };
-    fs.writeFile(TEST_DIR + '/' + shortId + '.txt', JSON.stringify(newObject));
+    fs.writeFile(TEST_DIR + '/' + shortId + '.json', JSON.stringify(newObject));
 
     const result = await firstDb.get(newObject.id);
     expect(result).toEqual({ name: 'test name', text: 'I do not follow', id: shortId });
+
+  });
+
+  it('checks for ENOENT in the implementation, to check it returns a Not found error', async () => {
+
+    const firstDb = new SimpleDb(TEST_DIR);
+    const shortId = shortid.generate();
+    const newObject = {
+      name: 'test name',
+      text: 'I do not follow',
+      id: shortId
+    };
+    fs.writeFile(TEST_DIR + '/' + shortId + '.json', JSON.stringify(newObject));
+
+    const result = await firstDb.get(7);
+    expect(result.message).toEqual('Not found');
+
+  });
+
+  it('Takes an object, assigns a random id (sets an id property) and the serializes (JSON.stringify) the object into a file of name [id].json.', async () => {
+    const firstDb = new SimpleDb(TEST_DIR);
+    const newObject = {
+      name: 'test name',
+      text: 'I do not follow'
+    };
+    await firstDb.save(newObject);
+    expect(await firstDb.get(newObject.id)).toEqual(newObject);
 
   });
 
