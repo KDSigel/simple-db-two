@@ -68,18 +68,20 @@ describe('simple database', () => {
       name: 'Erich',
       text: 'I love my cohort'
     };
-    await firstDb.save(newObject1);
     await firstDb.save(newObject2);
-
+    await firstDb.save(newObject1);
+    
     const allObjects = await firstDb.getAll();
 
-    expect(allObjects).toEqual([{
+    expect(allObjects).toEqual(expect.arrayContaining([{
+      id: expect.any(String),
       name: 'test name',
       text: 'I do not follow'
     }, {
+      id: expect.any(String),
       name: 'Erich',
       text: 'I love my cohort'
-    }]);
+    }]));
   });
 
 });
